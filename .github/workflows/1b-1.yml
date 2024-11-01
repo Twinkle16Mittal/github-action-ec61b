@@ -1,0 +1,16 @@
+name: Test Environment Variables
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  example-job:
+    runs-on: ubuntu-latest
+    env:
+      VAR1: "Hello"
+    steps:
+    - name: Set VAR2
+      run: echo "VAR2=${VAR1} World" >> $GITHUB_ENV
+    - name: Echo VAR2
+      run: echo $VAR2  # This will output "Hello World"
