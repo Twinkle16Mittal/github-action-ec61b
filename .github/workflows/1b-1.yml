@@ -7,10 +7,20 @@ on:
 jobs:
   example-job:
     runs-on: ubuntu-latest
+    outputs:
+      VAR2: ${{ steps.set-var2.outputs.VAR2 }}
     env:
       VAR1: "Hello"
     steps:
-    - name: Set VAR2
-      run: echo "VAR2=${VAR1} World" >> $GITHUB_ENV
+    - id: set-var2
+      run: echo "::set-output name=VAR2::${VAR1} World"
     - name: Echo VAR2
-      run: echo $VAR2  # This will output "Hello World"
+      run: echo ${{ steps.set-var2.outputs.VAR2 }}
+
+  another-job:
+    needs: example-job
+    runs-on: ubuntu-latest
+    steps:
+    - name: Echo VAR2 from previous job
+      run: echo ${{ needs.example-job.outputs.VAR2 }}
+
